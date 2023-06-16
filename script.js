@@ -11,15 +11,26 @@ let controls;
 let reticle;
 let hitTestSource = null;
 let hitTestSourceRequested = false;
-			
-init();
-animate();
+	
+const loadGLTF = (path) => {
+	return new Promise((resolve, reject) => {
+	  const loader = new GLTFLoader();
+	  loader.load(path, (gltf) => {
+		resolve(gltf);
+	  });
+	});
+};
+
+
+
 
 let model_rendered=false;
 gltfLoader = new GLTFLoader();
 
 
-const CreateSphere = (x, y, z, color) => {
+
+
+/*const CreateSphere = (x, y, z, color) => {
     const sphereMesh = new THREE.Mesh(
       new THREE.SphereGeometry(0.1, 32, 32),
       new THREE.MeshBasicMaterial({ color: color })
@@ -29,13 +40,50 @@ const CreateSphere = (x, y, z, color) => {
     scene.add(sphereMesh);
   };
 
-CreateSphere(0, -0.19, -0.5, "yellow"); //batsman position
+CreateSphere(0, -0.19, -0.5, "yellow"); //batsman position*/
 // Logic for marking a boundary
 // ===================== Logic for marking a boundary ======================
 // if Batsman position (j,k) then
 // x = radius*cos(t) + j
 // y = radius*sin(t) + k
 
+/*function loadModel() {
+
+		if (reticle.visible) {
+			gltfLoader.load(
+				'static/Stadium_v2_1.glb', function (gltf) {
+					const model = gltf.scene;
+					model.position.copy(reticle.position);
+					model.position.y-=0.2;
+					model.position.z-=0.5;
+					model.quaternion.copy(reticle.quaternion);
+					model.scale.set(0.3, 0.3, 0.3);
+					var box= new THREE.Box3();
+					box.setFromObject(model);
+				
+					model.name="stadium";
+					scene.add(model);
+					
+					model_rendered=true;
+					drawWagonWheels(2,2,"red");
+					// boundingBox(model); //Helper for callibrating Wagon Wheel
+					
+					controls.update();
+					render();
+	
+					getPosition(model,reticle); //For getting model and reticle position
+	
+					},
+						undefined,
+						function (error) {
+						console.error('Error loading model:', error);
+					}
+					);
+					   }
+		
+		//return stadium;
+	}
+	*/
 
 function drawWagonWheels(xVal, yVal, color) {
 	// console.log("lneee.....");
@@ -53,7 +101,7 @@ function drawWagonWheels(xVal, yVal, color) {
 	for (let i = 0; i <= 50; i++) {
 	  let p = new THREE.Vector3().lerpVectors(start, end, i / 50);
 	  if (color == "0xFF1F1F") {
-		p.y = p.y + 10 * Math.sin((Math.PI * i) / 50);
+		p.y = p.y + 2 * Math.sin((Math.PI * i) / 50);
 	  } else {
 		p.y = p.y + 0.2 * Math.sin((Math.PI * i) / 50);
 	  }
@@ -87,11 +135,14 @@ function drawWagonWheels(xVal, yVal, color) {
 	//mesh.name = "WagonWheels_" + name;
 	mesh.material.color.setHex(color);
 
-	scene.add(mesh);
+	// scene.add(mesh);
+	const stadium = scene.getObjectByName("stadium");
+	console.log(stadium);
+	stadium.add(mesh);
 	//_runStore.push(mesh);
 }
 
-//drawWagonWheels(1,2,"red");
+
 
 function boundingBox(model)
 {
@@ -141,42 +192,7 @@ function getPosition(model,reticle)
 	console.log('reticle postion:', reticlePosition);
 }
 
-function loadModel() {
-///	var stadium;
 
-	if (reticle.visible) {
-		gltfLoader.load(
-			'static/Stadium_v2_1.glb', function (gltf) {
-				const model = gltf.scene;
-				model.position.copy(reticle.position);
-				model.position.y-=0.2;
-				model.position.z-=0.5;
-				model.quaternion.copy(reticle.quaternion);
-				model.scale.set(0.3, 0.3, 0.3);
-				var box= new THREE.Box3();
-				box.setFromObject(model);
-			//	stadium = box;
-
-				scene.add(model);
-				model_rendered=true;
-				drawWagonWheels(0,0,"red");
-				// boundingBox(model); //Helper for callibrating Wagon Wheel
-				
-				controls.update();
-				render();
-
-				getPosition(model,reticle); //For getting model and reticle position
-
-				},
-					undefined,
-					function (error) {
-					console.error('Error loading model:', error);
-				}
-				);
-       			}
-	
-	//return stadium;
-}
 
 
 function init() {
@@ -209,30 +225,45 @@ function init() {
 
 	document.body.appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
 
-			
-	function onSelect() {
-
-		if ( reticle.visible ) {
-
-			loadModel();			
-			reticle.visible=false;
-
-		}
-		reticle.visible=false;
-
-	}
-    
-	controller = renderer.xr.getController( 0 );
-	controller.addEventListener( 'select', onSelect );
-	scene.add( controller );
-
 	reticle = new THREE.Mesh(
 		new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
 		new THREE.MeshBasicMaterial()
 		);
 		reticle.matrixAutoUpdate = false;
 		reticle.visible = false;
-		scene.add( reticle );
+		scene.add( reticle );		
+
+	const onSelect = async()=>{
+		if ( reticle.visible ) {
+			
+			const stadium= await loadGLTF('static/Stadium_v2_1.glb');
+			const model = stadium.scene;
+			model.position.copy(reticle.position);
+			model.position.y-=0.2;
+			model.position.z-=0.5;
+			model.quaternion.copy(reticle.quaternion);
+			model.scale.set(0.3, 0.3, 0.3);
+			var box= new THREE.Box3();
+			box.setFromObject(model);
+		
+			model.name="stadium";
+			scene.add(model);
+			drawWagonWheels(2,2,"0xFF1F1F");
+			boundingBox(model);
+			model_rendered=true;
+//			reticle.visible=false;
+
+		}
+//		reticle.visible=false;
+
+	}
+
+    onSelect();
+	controller = renderer.xr.getController( 0 );
+	controller.addEventListener( 'select', onSelect );
+	scene.add( controller );
+
+
 
 		window.addEventListener( 'resize', onWindowResize );
 
@@ -316,3 +347,5 @@ function render( timestamp, frame ) {
 	renderer.render( scene, camera );
 
 }
+init();
+animate();
