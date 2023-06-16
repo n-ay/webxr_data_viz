@@ -37,6 +37,62 @@ CreateSphere(0, -0.19, -0.5, "yellow"); //batsman position
 // y = radius*sin(t) + k
 
 
+function drawWagonWheels(xVal, yVal, color) {
+	// console.log("lneee.....");
+	var numPoints = 100;
+	//var start = new THREE.Vector3(51, 0, -45);
+	// var start = new THREE.Vector3(0, -0.5, -0.5);
+	var start = new THREE.Vector3(0, 0, 0);
+	// var start = new THREE.Vector3(9, -0.19, -0.5); //yellow sphere coordinates
+	// var middle = new THREE.Vector3(38, 0,-50);
+	// var middle = new THREE.Vector3(38, 0, -55);
+	// var end = new THREE.Vector3(yVal, 0, -xVal);
+	let end = new THREE.Vector3(yVal, 0, -xVal);
+  
+	let points = [];
+	for (let i = 0; i <= 50; i++) {
+	  let p = new THREE.Vector3().lerpVectors(start, end, i / 50);
+	  if (color == "0xFF1F1F") {
+		p.y = p.y + 10 * Math.sin((Math.PI * i) / 50);
+	  } else {
+		p.y = p.y + 0.2 * Math.sin((Math.PI * i) / 50);
+	  }
+	  points.push(p);
+	}
+	let curve = new THREE.CatmullRomCurve3(points);
+	// var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end);
+  
+	var tube = new THREE.TubeGeometry(curve, numPoints, 0.02, 50, false);
+	var mesh = new THREE.Mesh(
+	  tube,
+	  new THREE.MeshPhongMaterial({
+		side: THREE.DoubleSide,
+	  })
+	);
+	// const stad = group.getObjectByName("stadium");
+	// group.add(mesh);
+	// let test = init.instantTrackerGroup.getObjectByName("stadium");
+	// test.add(mesh);
+
+	//   let test = loadModel();
+	//   test.add(mesh);
+
+	// console.log(test);
+  
+	console.log("heree", mesh);
+	mesh.scale.set(0.3, 0.3, 0.3);
+	mesh.position.set(0, 0, 0);
+	// mesh.position.set(-7, 5, -5);
+	// mesh.rotation.x = Math.PI / 7;
+	//mesh.name = "WagonWheels_" + name;
+	mesh.material.color.setHex(color);
+
+	scene.add(mesh);
+	//_runStore.push(mesh);
+}
+
+//drawWagonWheels(1,2,"red");
+
 function boundingBox(model)
 {
 	//bounding box helper for the model
@@ -86,6 +142,8 @@ function getPosition(model,reticle)
 }
 
 function loadModel() {
+///	var stadium;
+
 	if (reticle.visible) {
 		gltfLoader.load(
 			'static/Stadium_v2_1.glb', function (gltf) {
@@ -97,11 +155,12 @@ function loadModel() {
 				model.scale.set(0.3, 0.3, 0.3);
 				var box= new THREE.Box3();
 				box.setFromObject(model);
+			//	stadium = box;
 
 				scene.add(model);
 				model_rendered=true;
-
-				boundingBox(model); //Helper for callibrating Wagon Wheel
+				drawWagonWheels(0,0,"red");
+				// boundingBox(model); //Helper for callibrating Wagon Wheel
 				
 				controls.update();
 				render();
@@ -115,6 +174,8 @@ function loadModel() {
 				}
 				);
        			}
+	
+	//return stadium;
 }
 
 
@@ -174,6 +235,7 @@ function init() {
 		scene.add( reticle );
 
 		window.addEventListener( 'resize', onWindowResize );
+
 
 }
 
