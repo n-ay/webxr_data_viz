@@ -100,17 +100,17 @@ function drawWagonWheels(xVal, yVal, color) {
 	let points = [];
 	for (let i = 0; i <= 50; i++) {
 	  let p = new THREE.Vector3().lerpVectors(start, end, i / 50);
-	  if (color == "0xFF1F1F") {
-		p.y = p.y + 0.5 * Math.sin((Math.PI * i) / 50);
+	  if (color == "0XEB6363") {
+		p.y = p.y + 0.25 * Math.sin((Math.PI * i) / 50);
 	  } else {
-		p.y = p.y + 0.1 * Math.sin((Math.PI * i) / 50);
+		p.y = p.y + 0.01 * Math.sin((Math.PI * i) / 50);
 	  }
 	  points.push(p);
 	}
 	let curve = new THREE.CatmullRomCurve3(points);
 	// var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end);
   
-	var tube = new THREE.TubeGeometry(curve, numPoints, 0.02, 50, false);
+	var tube = new THREE.TubeGeometry(curve, numPoints, 0.005, 100, false);
 	var mesh = new THREE.Mesh(
 	  tube,
 	  new THREE.MeshPhongMaterial({
@@ -121,6 +121,7 @@ function drawWagonWheels(xVal, yVal, color) {
 	console.log("heree", mesh);
 	mesh.scale.set(0.3, 0.3, 0.3);
 	mesh.position.set(0, 0, 0);
+	mesh.castShadow = true;// shadow
 	// mesh.position.set(-7, 5, -5);
 	// mesh.rotation.x = Math.PI / 7;
 	//mesh.name = "WagonWheels_" + name;
@@ -129,8 +130,9 @@ function drawWagonWheels(xVal, yVal, color) {
 	// scene.add(mesh);
 	const stadium = scene.getObjectByName("stadium");
 	console.log(stadium);
-	stadium.add(mesh);
+	stadium.add(mesh); //tubes are made children to stadium here.
 	//_runStore.push(mesh); //1,2,3,4,6 buttons, used in displaylines
+	stadium.receiveShadow = true; //shadow
 }
 
 
@@ -196,14 +198,27 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 
-	const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
-	light.position.set( 0.5, 1, 0.25 );
-	scene.add( light );
+	// const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
+	// light.position.set( 0.5, 1, 0.25 );
+	// scene.add( light )
+
+	//shadowLighting
+	
+	const light = new THREE.DirectionalLight(0xffffff, 1);
+	light.position.set(0, 10, 0);
+	light.castShadow = true;
+	light.shadow.mapSize.width = 1024;
+	light.shadow.mapSize.height = 1024;
+	light.shadow.bias = -0.001;
+	scene.add(light);
+
 
 	renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.xr.enabled = true;
+	renderer.shadowMap.enabled = true; //shadow
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap; //shadow
 	container.appendChild( renderer.domElement );
 
 	controls=new OrbitControls(camera, renderer.domElement);
@@ -239,11 +254,21 @@ function init() {
 		
 			model.name="stadium";
 			scene.add(model);
-			drawWagonWheels(0.5,0.5,"0xFF1F1F");
-			drawWagonWheels(-0.1,0.1,"0x0000FF");
-			drawWagonWheels(-0.38,0.38,"0x0000FF");
-			drawWagonWheels(-0.5,-0.5,"0xFF1F1F");
-			drawWagonWheels(-0.38,-0.38,"0x0000FF");
+			drawWagonWheels(0.2,0.8,"0XEB6363"); //red(6's)
+			drawWagonWheels(-0.15,0.25,"0xFEE88A"); //yellow(1/2's)
+			drawWagonWheels(-0.215,-0.15,"0xFEE88A"); //yellow(1/2's)
+			drawWagonWheels(0.25,0.3,"0xFEE88A"); //yellow(1/2's)
+			drawWagonWheels(-0.1,0.46,"0xFEE88A"); //yellow(1/2's)
+			drawWagonWheels(0.4,-0.1,"0xFEE88A"); //yellow(1/2's)
+			drawWagonWheels(-0.5,0.15,"0xFEE88A"); //yellow(1/2's)
+			drawWagonWheels(0.8,0.38,"0x8EB6F0"); // **blue(4's)
+			drawWagonWheels(-0.6,-0.6,"0XEB6363"); //red(6's)
+			drawWagonWheels(-0.68,0.8,"0x9EADC3");//blue(4's)
+			drawWagonWheels(-0.8,-0.18,"0x9EADC3");//blue(4's)
+			drawWagonWheels(0.7,0.7,"0XEB6363"); //red(6's)
+			drawWagonWheels(-0.85,0.85,"0XEB6363"); //red(6's)
+			drawWagonWheels(-0.48,0.48,"0x9EADC3");//blue(4's)
+			drawWagonWheels(0.4,-0.68,"0x9EADC3");//blue(4's)
 			//boundingBox(model);
 			model_rendered=true;
 //			reticle.visible=false;
