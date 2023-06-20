@@ -49,11 +49,11 @@ async function placeText() {
 
     const material = [
         new THREE.MeshPhongMaterial({
-        	color: 0xfff2cc,
+        	color: 0xffe599,
         	flatShading: true
          }), // front
         new THREE.MeshPhongMaterial({
-            color: 0xffe599
+            color: 0xfff2cc
         }) // side
     ]
 
