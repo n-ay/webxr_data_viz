@@ -90,10 +90,14 @@ function fetchMatchData() {
 		const runs = ball.runsBat;
 		const pitchMapX = ball.bowlingAnalysis.pitchMap.x;
 		const pitchMapY = ball.bowlingAnalysis.pitchMap.y;
-		const landingPosition = { x: pitchMapX, y: pitchMapY };
+		const balllandingPosition = { x: pitchMapX, y: pitchMapY };
+		const arrivalX = ball.battingAnalysis.arrival.x;
+		const arrivalY = ball.battingAnalysis.arrival.y;
+		const landingPosition = { x: arrivalX, y: arrivalY };
 
 		console.log("Runs:", runs);
-		console.log("Landing Position:", landingPosition);
+		console.log("Ball Pitch Landing Position:", balllandingPosition);
+		console.log("Ball Landing Position:", landingPosition);
 		});
 
 	  })
