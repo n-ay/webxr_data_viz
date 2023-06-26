@@ -12,7 +12,8 @@ let controls;
 let reticle, parent,textMesh;
 let hitTestSource = null;
 let hitTestSourceRequested = false;
-	
+
+/*-----------------Loading Model-----------------------------------------*/	
 const loadGLTF = (path) => {
 	return new Promise((resolve, reject) => {
 	  const loader = new GLTFLoader();
@@ -22,7 +23,92 @@ const loadGLTF = (path) => {
 	});
 };
 
-//Adding the Tap to Place Text
+/*------------------------Fetching Data------------------------------------*/
+
+let jsonMatchData, jsonPlayerStat;
+var firstInningsData, secondInningsData;
+
+// Function to fetch general data
+function fetchMatchData() {
+	const url = 'https://d1u2maujpzk42.cloudfront.net/icc-scores/ef884c07-5b63-4a42-ac72-3947471c43ec/player.json';
+  
+	return fetch(url)
+	  .then(response => response.json())
+	  .then(data => {
+		jsonMatchData=data;
+		//console.log(data);
+		firstInningsData = data.first_innings_players;
+        secondInningsData = data.second_innings_players;  
+        console.log(firstInningsData)
+        console.log(secondInningsData)
+
+		const firstInningsPlayerNames = data.first_innings_players.map(player => player.player_name);
+      	const secondInningsPlayerNames = data.second_innings_players.map(player => player.player_name);
+
+		console.log("First Inning Player Names:", firstInningsPlayerNames);
+      	console.log("Second Inning Player Names:", secondInningsPlayerNames);
+
+		const firstInningsPlayerImages = data.first_innings_players.map(player => player.player_image);
+      	const secondInningsPlayerImages = data.second_innings_players.map(player => player.player_image);
+      
+     	console.log("First Inning Player Names:", firstInningsPlayerImages);
+      	console.log("Second Inning Player Names:", secondInningsPlayerImages);
+
+		const firstInningsCountry = {
+			name: data.first_innings,
+			flag: data.first_innings_team_logo,
+			short_code: data.first_innings_shortcode
+		  };
+		  
+		const secondInningsCountry = {
+			name: data.second_innings,
+			flag: data.second_innings_team_logo,
+			short_code: data.second_innings_shortcode
+		  };
+
+		console.log("First innings Country & Flag:",firstInningsCountry); 
+		console.log("Second innings Country & Flag:", secondInningsCountry);
+		
+	  })
+	  .catch(error => {
+		console.error('Error fetching general data:', error);
+	  });
+  }
+  
+  // Function to fetch player-wise data
+  function fetchPlayerData(playerId) {
+	const url = `https://d1u2maujpzk42.cloudfront.net/icc-scores/ef884c07-5b63-4a42-ac72-3947471c43ec/${playerId}.json`;
+	
+	return fetch(url)
+	  .then(response => response.json())
+	  .then(data => {
+		jsonPlayerStat=data;
+		console.log(`Player ID: ${playerId}, Player Name:${data.name}'s Data`, data);
+		const balls = data.balls_details;
+
+    	balls.forEach(ball => {
+		const runs = ball.runsBat;
+		const pitchMapX = ball.bowlingAnalysis.pitchMap.x;
+		const pitchMapY = ball.bowlingAnalysis.pitchMap.y;
+		const landingPosition = { x: pitchMapX, y: pitchMapY };
+
+		console.log("Runs:", runs);
+		console.log("Landing Position:", landingPosition);
+		});
+
+	  })
+	  .catch(error => {
+		console.error('Error fetching player data:', error);
+	  });
+  }
+  
+
+// Checking the functions
+fetchMatchData(); // Fetch overall data
+fetchPlayerData('999c8498-7b17-4a81-8ea5-9e366c535862'); // Fetch player-wise data for player with ID
+
+
+/*-----------------Adding the Tap to Place Text-----------------------------*/
 
 const loader = new FontLoader()
 // promisify font loading
@@ -49,11 +135,11 @@ async function placeText() {
 
     const material = [
         new THREE.MeshPhongMaterial({
-        	color: 0xffe599,
+        	color: 0xfff2cc,
         	flatShading: true
          }), // front
         new THREE.MeshPhongMaterial({
-            color: 0xfff2cc
+            color: 0xffe599
         }) // side
     ]
 
@@ -81,6 +167,7 @@ async function placeText() {
 
 let model_rendered=false;
 
+/*--------------------------------Adding Wagon wheel------------------------------*/
 
 function drawWagonWheels(xVal, yVal, color) {
 
@@ -176,7 +263,7 @@ function getPosition(model,reticle)
 	console.log('reticle postion:', reticlePosition);
 }
 
-
+/*---------------------------------INIT FUNCTION-------------------------------*/
 
 
 function init() {
