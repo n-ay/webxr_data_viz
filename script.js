@@ -366,7 +366,22 @@ function init() {
 				}
 			}
 
-			for(int i=1; i<=two; i++) {
+			for(let i=1; i<=one; i++) {
+				if(landingPosition.x >0 && landingPosition.y >0) {
+					drawWagonWheels(0.15,0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x >0 && landingPosition.y <0) {
+					drawWagonWheels(0.15,-0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y >0) {
+					drawWagonWheels(-0.15,0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y <0) {
+					drawWagonWheels(-0.15,-0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+			}
+
+			for(let i=1; i<=two; i++) {
 				if(landingPosition.x >0 && landingPosition.y >0) {
 					drawWagonWheels(0.215,0.15,"0xFEE88A"); //yellow(1/2's)
 				}
@@ -381,7 +396,7 @@ function init() {
 				}
 			}
 
-			for(int i=1; i<=three; i++) {
+			for(let i=1; i<=three; i++) {
 				if(landingPosition.x >0 && landingPosition.y >0) {
 					drawWagonWheels(0.5,0.15,"0xFEE88A")
 				}
@@ -396,7 +411,7 @@ function init() {
 				}
 			}
 
-			for(int i=1; i<=four; i++) {
+			for(let i=1; i<=four; i++) {
 				if(landingPosition.x >0 && landingPosition.y >0) {
 					drawWagonWheels(0.8,0.18,"0x9EADC3");//blue(4's)
 				}
@@ -411,7 +426,7 @@ function init() {
 				}
 			}
 
-			for(int i=1; i<=six; i++) {
+			for(let i=1; i<=six; i++) {
 				if(landingPosition.x >0 && landingPosition.y >0) {
 					drawWagonWheels(0.2,0.8,"0xFEE88A"); //red(6's)
 				}
@@ -425,9 +440,6 @@ function init() {
 					drawWagonWheels(-0.2,-0.8,"0xFEE88A"); //red(6's)
 				}
 			}
-			
-
-
 			
 			// drawWagonWheels(0.2,0.8,"0XEB6363"); //red(6's)
 			// drawWagonWheels(-0.15,0.25,"0xFEE88A"); //yellow(1/2's)
