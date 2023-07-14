@@ -96,7 +96,7 @@ function fetchMatchData() {
 		const landingPosition = { x: arrivalX, y: arrivalY };
 
 		console.log("Runs:", runs);
-		console.log("Ball Pitch Landing Position:", balllandingPosition);
+		// console.log("Ball Pitch Landing Position:", balllandingPosition);
 		console.log("Ball Landing Position:", landingPosition);
 		});
 
