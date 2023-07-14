@@ -88,8 +88,8 @@ function fetchMatchData() {
 
     	balls.forEach(ball => {
 		const runs = ball.runsBat;
-		const pitchMapX = ball.bowlingAnalysis.pitchMap.x;
-		const pitchMapY = ball.bowlingAnalysis.pitchMap.y;
+		// const pitchMapX = ball.bowlingAnalysis.pitchMap.x;
+		// const pitchMapY = ball.bowlingAnalysis.pitchMap.y;
 		const balllandingPosition = { x: pitchMapX, y: pitchMapY };
 		const arrivalX = ball.battingAnalysis.arrival.x;
 		const arrivalY = ball.battingAnalysis.arrival.y;
