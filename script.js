@@ -27,6 +27,7 @@ const loadGLTF = (path) => {
 
 let jsonMatchData, jsonPlayerStat;
 var firstInningsData, secondInningsData;
+var one, two, three, four, six;
 
 // Function to fetch general data
 function fetchMatchData() {
@@ -36,6 +37,11 @@ function fetchMatchData() {
 	  .then(response => response.json())
 	  .then(data => {
 		jsonMatchData=data;
+		one = data.run_details.one;
+		two =  data.run_details.two;
+		three = data.run_details. three;
+		four =  data.run_details.four;
+		six = data.run_details.six;
 		//console.log(data);
 		firstInningsData = data.first_innings_players;
         secondInningsData = data.second_innings_players;  
@@ -344,7 +350,86 @@ function init() {
 		
 			model.name="stadium";
 			scene.add(model);
-			drawWagonWheels(0.2,0.8,"0XEB6363"); //red(6's)
+			
+			for(int i=1; i<=one; i++) {
+				if(landingPosition.x >0 && landingPosition.y >0) {
+					drawWagonWheels(0.15,0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x >0 && landingPosition.y <0) {
+					drawWagonWheels(0.15,-0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y >0) {
+					drawWagonWheels(-0.15,0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y <0) {
+					drawWagonWheels(-0.15,-0.25,"0xFEE88A"); //yellow(1/2's)
+				}
+			}
+
+			for(int i=1; i<=two; i++) {
+				if(landingPosition.x >0 && landingPosition.y >0) {
+					drawWagonWheels(0.215,0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x >0 && landingPosition.y <0) {
+					drawWagonWheels(0.215,-0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y >0) {
+					drawWagonWheels(-0.215,0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y <0) {
+					drawWagonWheels(-0.215,-0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+			}
+
+			for(int i=1; i<=three; i++) {
+				if(landingPosition.x >0 && landingPosition.y >0) {
+					drawWagonWheels(0.5,0.15,"0xFEE88A")
+				}
+				if(landingPosition.x >0 && landingPosition.y <0) {
+					drawWagonWheels(0.5,-0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y >0) {
+					drawWagonWheels(-0.5,0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+				if(landingPosition.x <0 && landingPosition.y <0) {
+					drawWagonWheels(-0.5,-0.15,"0xFEE88A"); //yellow(1/2's)
+				}
+			}
+
+			for(int i=1; i<=four; i++) {
+				if(landingPosition.x >0 && landingPosition.y >0) {
+					drawWagonWheels(0.8,0.18,"0x9EADC3");//blue(4's)
+				}
+				if(landingPosition.x >0 && landingPosition.y <0) {
+					drawWagonWheels(0.8,-0.18,"0x9EADC3");//blue(4's)
+				}
+				if(landingPosition.x <0 && landingPosition.y >0) {
+					drawWagonWheels(-0.8,0.18,"0x9EADC3");//blue(4's)
+				}
+				if(landingPosition.x <0 && landingPosition.y <0) {
+					drawWagonWheels(-0.8,-0.18,"0x9EADC3");//blue(4's)
+				}
+			}
+
+			for(int i=1; i<=six; i++) {
+				if(landingPosition.x >0 && landingPosition.y >0) {
+					drawWagonWheels(0.2,0.8,"0xFEE88A"); //red(6's)
+				}
+				if(landingPosition.x >0 && landingPosition.y <0) {
+					drawWagonWheels(0.2,-0.8,"0xFEE88A"); //red(6's)
+				}
+				if(landingPosition.x <0 && landingPosition.y >0) {
+					drawWagonWheels(-0.2,0.8,"0xFEE88A"); //red(6's)
+				}
+				if(landingPosition.x <0 && landingPosition.y <0) {
+					drawWagonWheels(-0.2,-0.8,"0xFEE88A"); //red(6's)
+				}
+			}
+			
+
+
+			
+			// drawWagonWheels(0.2,0.8,"0XEB6363"); //red(6's)
 			// drawWagonWheels(-0.15,0.25,"0xFEE88A"); //yellow(1/2's)
 			// drawWagonWheels(-0.215,-0.15,"0xFEE88A"); //yellow(1/2's)
 			// drawWagonWheels(0.25,0.3,"0xFEE88A"); //yellow(1/2's)
